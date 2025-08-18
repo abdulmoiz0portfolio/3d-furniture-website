@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OfficeMax 3D - Premium Office Furniture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            color: white;
+        }
+
+        /* Page Container */
+        .page {
+            display: none;
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 2rem 0;
+            color: white;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Furniture Grid */
+        .furniture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .furniture-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .furniture-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .furniture-3d {
+            perspective: 1000px;
+            height: 200px;
+            margin: 1rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .furniture-model {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotate 10s infinite linear;
+            cursor: pointer;
+        }
+
+        .furniture-model:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotateY(0deg) rotateX(15deg); }
+            100% { transform: rotateY(360deg) rotateX(15deg); }
+        }
+
+        /* Office Chair Models */
+        .office-chair {
+            transform-style: preserve-3d;
+        }
+
+        .chair-back, .chair-seat, .chair-base, .chair-armrest {
+            position: absolute;
+            border-radius: 8px;
+        }
+
+        .executive-chair .chair-back {
+            width: 80px;
+            height: 90px;
+            background: linear-gradient(45deg, #2c3e50, #34495e);
+            top: 10px;
+            left: 35px;
+            transform: rotateY(0deg) translateZ(15px);
+            border: 2px solid #1a252f;
+        }
+
+        .executive-chair .chair-seat {
+            width: 80px;
+            height: 60px;
+            background: linear-gradient(45deg, #2c3e50, #34495e);
+            top: 80px;
+            left: 35px;
+            transform: rotateX(-90deg) translateZ(30px);
+            border: 2px solid #1a252f;
+        }
+
+        .executive-chair .chair-base {
+            width: 100px;
+            height: 15px;
+            background: linear-gradient(45deg, #7f8c8d, #95a5a6);
+            bottom: 10px;
+            left: 25px;
+            transform: rotateX(-90deg);
+            border-radius: 50px;
+        }
+
+        .executive-chair .chair-armrest {
+            width: 15px;
+            height: 40px;
+            background: linear-gradient(45deg, #34495e, #2c3e50);
+            top: 60px;
+        }
+
+        .executive-chair .chair-armrest:nth-child(5) { left: 20px; }
+        .executive-chair .chair-armrest:nth-child(6) { right: 20px; }
+
+        /* Ergonomic Chair */
+        .ergonomic-chair .chair-back {
+            width: 70px;
+            height: 85px;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            top: 15px;
+            left: 40px;
+            transform: rotateY(0deg) translateZ(15px);
+            border: 2px solid #a93226;
+        }
+
+        .ergonomic-chair .chair-seat {
+            width: 75px;
+            height: 55px;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            top: 85px;
+            left: 37px;
+            transform: rotateX(-90deg) translateZ(25px);
+            border: 2px solid #a93226;
+        }
+
+        /* Desk Models */
+        .desk {
+            transform-style: preserve-3d;
+        }
+
+        .desk-top, .desk-leg, .desk-drawer {
+            position: absolute;
+        }
+
+        .executive-desk .desk-top {
+            width: 120px;
+            height: 80px;
+            background: linear-gradient(45deg, #8b4513, #a0522d);
+            top: 50px;
+            left: 15px;
+            transform: rotateX(-90deg) translateZ(40px);
+            border-radius: 8px;
+            border: 2px solid #654321;
+        }
+
+        .executive-desk .desk-leg {
+            width: 12px;
+            height: 80px;
+            background: linear-gradient(180deg, #654321, #8b4513);
+        }
+
+        .executive-desk .desk-leg:nth-child(2) { top: 90px; left: 25px; }
+        .executive-desk .desk-leg:nth-child(3) { top: 90px; right: 25px; }
+        .executive-desk .desk-leg:nth-child(4) { bottom: 0px; left: 25px; }
+        .executive-desk .desk-leg:nth-child(5) { bottom: 0px; right: 25px; }
+
+        .executive-desk .desk-drawer {
+            width: 80px;
+            height: 15px;
+            background: linear-gradient(45deg, #654321, #8b4513);
+            top: 70px;
+            left: 35px;
+            transform: translateZ(20px);
+            border: 1px solid #4a2c17;
+            border-radius: 3px;
+        }
+
+        /* Standing Desk */
+        .standing-desk .desk-top {
+            width: 110px;
+            height: 70px;
+            background: linear-gradient(45deg, #2c3e50, #34495e);
+            top: 30px;
+            left: 20px;
+            transform: rotateX(-90deg) translateZ(50px);
+            border-radius: 8px;
+            border: 2px solid #1a252f;
+        }
+
+        .standing-desk .desk-leg {
+            width: 8px;
+            height: 100px;
+            background: linear-gradient(180deg, #7f8c8d, #95a5a6);
+        }
+
+        .standing-desk .desk-leg:nth-child(2) { top: 80px; left: 30px; }
+        .standing-desk .desk-leg:nth-child(3) { top: 80px; right: 30px; }
+
+        /* Cabinet Models */
+        .cabinet {
+            transform-style: preserve-3d;
+        }
+
+        .cabinet-body, .cabinet-door, .cabinet-handle {
+            position: absolute;
+        }
+
+        .filing-cabinet .cabinet-body {
+            width: 60px;
+            height: 100px;
+            background: linear-gradient(45deg, #7f8c8d, #95a5a6);
+            top: 25px;
+            left: 45px;
+            transform: translateZ(30px);
+            border: 2px solid #5d6d7e;
+            border-radius: 5px;
+        }
+
+        .filing-cabinet .cabinet-door {
+            width: 55px;
+            height: 30px;
+            background: linear-gradient(45deg, #95a5a6, #bdc3c7);
+            left: 47px;
+            border: 1px solid #7f8c8d;
+            border-radius: 3px;
+        }
+
+        .filing-cabinet .cabinet-door:nth-child(2) { top: 30px; }
+        .filing-cabinet .cabinet-door:nth-child(3) { top: 65px; }
+        .filing-cabinet .cabinet-door:nth-child(4) { top: 100px; }
+
+        /* Bookshelf */
+        .bookshelf .cabinet-body {
+            width: 80px;
+            height: 120px;
+            background: linear-gradient(45deg, #d35400, #e67e22);
+            top: 15px;
+            left: 35px;
+            transform: translateZ(25px);
+            border: 2px solid #a04000;
+            border-radius: 5px;
+        }
+
+        .bookshelf .shelf {
+            width: 75px;
+            height: 3px;
+            background: linear-gradient(45deg, #a04000, #d35400);
+            left: 37px;
+            position: absolute;
+        }
+
+        .bookshelf .shelf:nth-child(2) { top: 45px; }
+        .bookshelf .shelf:nth-child(3) { top: 75px; }
+        .bookshelf .shelf:nth-child(4) { top: 105px; }
+
+        /* Conference Table */
+        .conference-table .desk-top {
+            width: 140px;
+            height: 90px;
+            background: linear-gradient(45deg, #8b4513, #a0522d);
+            top: 55px;
+            left: 5px;
+            transform: rotateX(-90deg) translateZ(40px);
+            border-radius: 15px;
+            border: 2px solid #654321;
+        }
+
+        .conference-table .desk-leg {
+            width: 20px;
+            height: 80px;
+            background: linear-gradient(180deg, #654321, #8b4513);
+            border-radius: 10px;
+        }
+
+        .conference-table .desk-leg:nth-child(2) { top: 95px; left: 35px; }
+        .conference-table .desk-leg:nth-child(3) { top: 95px; right: 35px; }
+
+        /* Product Info */
+        .furniture-info h3 {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .furniture-info p {
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 0.3rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+
+        /* About Page Styles */
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .about-content h2 {
+            color: #1e3c72;
+            margin-bottom: 1rem;
+        }
+
+        .about-content p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .furniture-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .furniture-model {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">OfficeMax 3D</div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showPage('home')" class="active">Home</a></li>
+                <li><a href="#" onclick="showPage('chairs')">Chairs</a></li>
+                <li><a href="#" onclick="showPage('desks')">Desks & Storage</a></li>
+                <li><a href="#" onclick="showPage('about')">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="page-header">
+            <h1>Premium Office Furniture in 3D</h1>
+            <p>Experience our complete collection of professional office furniture</p>
+        </div>
+
+        <div class="furniture-grid">
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model office-chair executive-chair">
+                        <div class="chair-back"></div>
+                        <div class="chair-seat"></div>
+                        <div class="chair-base"></div>
+                        <div class="chair-armrest"></div>
+                        <div class="chair-armrest"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Executive Chair</h3>
+                    <p>Premium leather executive chair with lumbar support</p>
+                    <div class="price">$599</div>
+                    <button class="btn" onclick="viewDetails('Executive Chair')">Details</button>
+                    <button class="btn" onclick="addToCart('Executive Chair', 599)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model desk executive-desk">
+                        <div class="desk-top"></div>
+                        <div class="desk-leg"></div>
+                        <div class="desk-leg"></div>
+                        <div class="desk-leg"></div>
+                        <div class="desk-leg"></div>
+                        <div class="desk-drawer"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Executive Desk</h3>
+                    <p>Solid wood executive desk with built-in storage</p>
+                    <div class="price">$899</div>
+                    <button class="btn" onclick="viewDetails('Executive Desk')">Details</button>
+                    <button class="btn" onclick="addToCart('Executive Desk', 899)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model cabinet filing-cabinet">
+                        <div class="cabinet-body"></div>
+                        <div class="cabinet-door"></div>
+                        <div class="cabinet-door"></div>
+                        <div class="cabinet-door"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Filing Cabinet</h3>
+                    <p>3-drawer steel filing cabinet with lock</p>
+                    <div class="price">$299</div>
+                    <button class="btn" onclick="viewDetails('Filing Cabinet')">Details</button>
+                    <button class="btn" onclick="addToCart('Filing Cabinet', 299)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model desk conference-table">
+                        <div class="desk-top"></div>
+                        <div class="desk-leg"></div>
+                        <div class="desk-leg"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Conference Table</h3>
+                    <p>Large conference table for 8-10 people</p>
+                    <div class="price">$1,299</div>
+                    <button class="btn" onclick="viewDetails('Conference Table')">Details</button>
+                    <button class="btn" onclick="addToCart('Conference Table', 1299)">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chairs Page -->
+    <div id="chairs" class="page">
+        <div class="page-header">
+            <h1>Office Chairs Collection</h1>
+            <p>Ergonomic and comfortable seating solutions</p>
+        </div>
+
+        <div class="furniture-grid">
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model office-chair executive-chair">
+                        <div class="chair-back"></div>
+                        <div class="chair-seat"></div>
+                        <div class="chair-base"></div>
+                        <div class="chair-armrest"></div>
+                        <div class="chair-armrest"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Executive Leather Chair</h3>
+                    <p>High-back executive chair with genuine leather upholstery and adjustable lumbar support</p>
+                    <div class="price">$599</div>
+                    <button class="btn" onclick="viewDetails('Executive Leather Chair')">Details</button>
+                    <button class="btn" onclick="addToCart('Executive Leather Chair', 599)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model office-chair ergonomic-chair">
+                        <div class="chair-back"></div>
+                        <div class="chair-seat"></div>
+                        <div class="chair-base"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Ergonomic Task Chair</h3>
+                    <p>Breathable mesh back with adjustable height and tilt mechanism</p>
+                    <div class="price">$399</div>
+                    <button class="btn" onclick="viewDetails('Ergonomic Task Chair')">Details</button>
+                    <button class="btn" onclick="addToCart('Ergonomic Task Chair', 399)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model office-chair executive-chair" style="transform: scale(0.9);">
+                        <div class="chair-back" style="background: linear-gradient(45deg, #27ae60, #2ecc71);"></div>
+                        <div class="chair-seat" style="background: linear-gradient(45deg, #27ae60, #2ecc71);"></div>
+                        <div class="chair-base"></div>
+                        <div class="chair-armrest"></div>
+                        <div class="chair-armrest"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Conference Chair</h3>
+                    <p>Mid-back conference chair with padded arms and swivel base</p>
+                    <div class="price">$299</div>
+                    <button class="btn" onclick="viewDetails('Conference Chair')">Details</button>
+                    <button class="btn" onclick="addToCart('Conference Chair', 299)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model office-chair ergonomic-chair" style="transform: scale(1.1);">
+                        <div class="chair-back" style="background: linear-gradient(45deg, #8e44ad, #9b59b6);"></div>
+                        <div class="chair-seat" style="background: linear-gradient(45deg, #8e44ad, #9b59b6);"></div>
+                        <div class="chair-base"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Gaming Office Chair</h3>
+                    <p>High-performance chair with racing-style design and RGB lighting</p>
+                    <div class="price">$499</div>
+                    <button class="btn" onclick="viewDetails('Gaming Office Chair')">Details</button>
+                    <button class="btn" onclick="addToCart('Gaming Office Chair', 499)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model office-chair executive-chair" style="transform: scale(0.8);">
+                        <div class="chair-back" style="background: linear-gradient(45deg, #f39c12, #e67e22); height: 60px;"></div>
+                        <div class="chair-seat" style="background: linear-gradient(45deg, #f39c12, #e67e22);"></div>
+                        <div class="chair-base"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Visitor Chair</h3>
+                    <p>Comfortable visitor chair with chrome legs and padded seat</p>
+                    <div class="price">$199</div>
+                    <button class="btn" onclick="viewDetails('Visitor Chair')">Details</button>
+                    <button class="btn" onclick="addToCart('Visitor Chair', 199)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model office-chair ergonomic-chair">
+                        <div class="chair-back" style="background: linear-gradient(45deg, #16a085, #1abc9c);"></div>
+                        <div class="chair-seat" style="background: linear-gradient(45deg, #16a085, #1abc9c);"></div>
+                        <div class="chair-base" style="background: linear-gradient(45deg, #34495e, #2c3e50);"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Standing Desk Chair</h3>
+                    <p>Adjustable height stool perfect for standing desks</p>
+                    <div class="price">$349</div>
+                    <button class="btn" onclick="viewDetails('Standing Desk Chair')">Details</button>
+                    <button class="btn" onclick="addToCart('Standing Desk Chair', 349)">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Desks & Storage Page -->
+    <div id="desks" class="page">
+        <div class="page-header">
+            <h1>Desks & Storage Solutions</h1>
+            <p>Complete workspace furniture and organization</p>
+        </div>
+
+        <div class="furniture-grid">
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model desk executive-desk">
+                        <div class="desk-top"></div>
+                        <div class="desk-leg"></div>
+                        <div class="desk-leg"></div>
+                        <div class="desk-leg"></div>
+                        <div class="desk-leg"></div>
+                        <div class="desk-drawer"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Executive Mahogany Desk</h3>
+                    <p>Premium mahogany desk with leather inlay and built-in drawers</p>
+                    <div class="price">$1,299</div>
+                    <button class="btn" onclick="viewDetails('Executive Mahogany Desk')">Details</button>
+                    <button class="btn" onclick="addToCart('Executive Mahogany Desk', 1299)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model desk standing-desk">
+                        <div class="desk-top"></div>
+                        <div class="desk-leg"></div>
+                        <div class="desk-leg"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Electric Standing Desk</h3>
+                    <p>Height-adjustable desk with memory presets and cable management</p>
+                    <div class="price">$799</div>
+                    <button class="btn" onclick="viewDetails('Electric Standing Desk')">Details</button>
+                    <button class="btn" onclick="addToCart('Electric Standing Desk', 799)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model cabinet filing-cabinet">
+                        <div class="cabinet-body"></div>
+                        <div class="cabinet-door"></div>
+                        <div class="cabinet-door"></div>
+                        <div class="cabinet-door"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>4-Drawer Filing Cabinet</h3>
+                    <p>Heavy-duty steel cabinet with central locking system</p>
+                    <div class="price">$399</div>
+                    <button class="btn" onclick="viewDetails('4-Drawer Filing Cabinet')">Details</button>
+                    <button class="btn" onclick="addToCart('4-Drawer Filing Cabinet', 399)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model cabinet bookshelf">
+                        <div class="cabinet-body"></div>
+                        <div class="shelf"></div>
+                        <div class="shelf"></div>
+                        <div class="shelf"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Executive Bookshelf</h3>
+                    <p>5-shelf wooden bookcase with adjustable shelves</p>
+                    <div class="price">$499</div>
+                    <button class="btn" onclick="viewDetails('Executive Bookshelf')">Details</button>
+                    <button class="btn" onclick="addToCart('Executive Bookshelf', 499)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model desk conference-table">
+                        <div class="desk-top"></div>
+                        <div class="desk-leg"></div>
+                        <div class="desk-leg"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Conference Table</h3>
+                    <p>12-person conference table with integrated power outlets</p>
+                    <div class="price">$1,899</div>
+                    <button class="btn" onclick="viewDetails('Conference Table')">Details</button>
+                    <button class="btn" onclick="addToCart('Conference Table', 1899)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="furniture-card">
+                <div class="furniture-3d">
+                    <div class="furniture-model desk executive-desk" style="transform: scale(0.8);">
+                        <div class="desk-top" style="background: linear-gradient(45deg, #ecf0f1, #bdc3c7);"></div>
+                        <div class="desk-leg" style="background: linear-gradient(180deg, #7f8c8d, #95a5a6);"></div>
+                        <div class="desk-leg" style="background: linear-gradient(180deg, #7f8c8d, #95a5a6);"></div>
+                        <div class="desk-leg" style="background: linear-gradient(180deg, #7f8c8d, #95a5a6);"></div>
+                        <div class="desk-leg" style="background: linear-gradient(180deg, #7f8c8d, #95a5a6);"></div>
+                    </div>
+                </div>
+                <div class="furniture-info">
+                    <h3>Modern L-Shaped Desk</h3>
+                    <p>Contemporary L-shaped desk with glass top and steel frame</p>
+                    <div class="price">$699</div>
+                    <button class="btn" onclick="viewDetails('Modern L-Shaped Desk')">Details</button>
+                    <button class="btn" onclick="addToCart('Modern L-Shaped Desk', 699)">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="about" class="page">
+        <div class="page-header">
+            <h1>About OfficeMax 3D</h1>
+            <p>Leading provider of premium office furniture solutions</p>
+        </div>
+
+        <div class="about-content">
+            <h2>Our Story</h2>
+            <p>Founded in 1995, OfficeMax 3D has been at the forefront of office furniture innovation for over 25 years. We specialize in creating ergonomic, stylish, and functional workspace solutions that enhance productivity and comfort.</p>
+
+            <h2>Our Mission</h2>
+            <p>To provide businesses and individuals with the highest quality office furniture that combines comfort, functionality, and aesthetic appeal. We believe that a well-designed workspace is essential for success and well-being.</p>
+
+            <h2>Why Choose Us?</h2>
+            <p>• Premium quality materials and construction<br>
+            • Ergonomic designs backed by research<br>
+            • Competitive pricing and flexible payment options<br>
+            • Expert consultation and space planning<br>
+            • Fast delivery and professional installation<br>
+            • Comprehensive warranty and after-sales support</p>
+
+            <h2>3D Visualization Technology</h2>
+            <p>Our innovative 3D visualization technology allows you to see exactly how our furniture will look in your space before you buy. This revolutionary approach helps you make informed decisions and ensures complete satisfaction with your purchase.</p>
+        </div>
+
+        <div class="contact-form">
+            <h2 style="text-align: center; color: #1e3c72; margin-bottom: 2rem;">Contact Us</h2>
+            <form onsubmit="submitContact(event)">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="company">Company Name</label>
+                    <input type="text" id="company" name="company">
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn" style="width: 100%; padding: 15px;">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+
+            // Update navigation
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function viewDetails(itemName) {
+            const details = {
+                'Executive Chair': 'Premium leather executive chair with adjustable lumbar support, pneumatic height adjustment, and 360° swivel. Dimensions: 26"W x 30"D x 42-46"H. Weight capacity: 300 lbs.',
+                'Executive Desk': 'Solid mahogany executive desk with leather writing surface, 3 drawers with soft-close mechanism, and cable management. Dimensions: 60"W x 30"D x 30"H.',
+                'Filing Cabinet': '4-drawer steel filing cabinet with central locking system, full-extension slides, and anti-tip mechanism. Accommodates letter and legal size files.',
+                'Conference Table': '12-person conference table with integrated power outlets, cable management, and scratch-resistant surface. Dimensions: 144"L x 48"W x 29"H.',
+                'Executive Leather Chair': 'High-back executive chair with genuine leather upholstery, adjustable lumbar support, and premium casters. Perfect for executive offices.',
+                'Ergonomic Task Chair': 'Breathable mesh back with adjustable height, tilt mechanism, and padded seat. Designed for all-day comfort and productivity.',
+                'Conference Chair': 'Mid-back conference chair with padded arms, swivel base, and durable upholstery. Ideal for meeting rooms and conference areas.',
+                'Gaming Office Chair': 'High-performance chair with racing-style design, RGB lighting, and premium padding. Perfect for long work sessions.',
+                'Visitor Chair': 'Comfortable visitor chair with chrome legs, padded seat, and modern design. Great for reception areas and offices.',
+                'Standing Desk Chair': 'Adjustable height stool perfect for standing desks, with 360° swivel and footrest. Promotes active sitting.',
+                'Executive Mahogany Desk': 'Premium mahogany desk with leather inlay, built-in drawers, and traditional craftsmanship. A statement piece for any executive office.',
+                'Electric Standing Desk': 'Height-adjustable desk with memory presets, cable management, and smooth electric operation. Promotes healthy work habits.',
+                '4-Drawer Filing Cabinet': 'Heavy-duty steel cabinet with central locking system, full-extension drawers, and anti-tip safety feature.',
+                'Executive Bookshelf': '5-shelf wooden bookcase with adjustable shelves, traditional design, and premium finish. Perfect for displaying books and awards.',
+                'Modern L-Shaped Desk': 'Contemporary L-shaped desk with tempered glass top, steel frame, and modern aesthetic. Maximizes workspace efficiency.'
+            };
+
+            alert(details[itemName] || 'Product details coming soon!');
+        }
+
+        function addToCart(itemName, price) {
+            cart.push({ name: itemName, price: price });
+            alert(`${itemName} ($${price}) has been added to your cart!\n\nCart total: ${cart.length} items`);
+        }
+
+        function submitContact(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const company = document.getElementById('company').value;
+            const message = document.getElementById('message').value;
+
+            alert(`Thank you ${name}! Your message has been received. We'll contact you at ${email} within 24 hours.`);
+            
+            // Reset form
+            event.target.reset();
+        }
+
+        // Add mouse interaction for 3D models
+        document.querySelectorAll('.furniture-model').forEach(model => {
+            let isMouseDown = false;
+            let startX = 0;
+            let currentRotation = 0;
+
+            model.addEventListener('mousedown', (e) => {
+                isMouseDown = true;
+                startX = e.clientX;
+                model.style.animationPlayState = 'paused';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isMouseDown) {
+                    const deltaX = e.clientX - startX;
+                    const rotation = currentRotation + (deltaX * 0.5);
+                    model.style.transform = `rotateY(${rotation}deg) rotateX(15deg)`;
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isMouseDown) {
+                    isMouseDown = false;
+                    setTimeout(() => {
+                        model.style.animationPlayState = 'running';
+                    }, 2000);
+                }
+            });
+
+            // Touch events for mobile
+            model.addEventListener('touchstart', (e) => {
+                isMouseDown = true;
+                startX = e.touches[0].clientX;
+                model.style.animationPlayState = 'paused';
+            });
+
+            model.addEventListener('touchmove', (e) => {
+                if (isMouseDown) {
+                    const deltaX = e.touches[0].clientX - startX;
+                    const rotation = currentRotation + (deltaX * 0.5);
+                    model.style.transform = `rotateY(${rotation}deg) rotateX(15deg)`;
+                }
+            });
+
+            model.addEventListener('touchend', () => {
+                if (isMouseDown) {
+                    isMouseDown = false;
+                    setTimeout(() => {
+                        model.style.animationPlayState = 'running';
+                    }, 2000);
+                }
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97147f3704f00d14',t:'MTc1NTU1MjQ2NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
